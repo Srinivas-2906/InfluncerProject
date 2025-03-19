@@ -2,10 +2,13 @@
 import { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
 import Button from './Button';
+import { Menu, X } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -47,29 +50,22 @@ const Navbar = () => {
             </Button>
           </div>
           
-          <button 
-            className="md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              strokeWidth={1.5} 
-              stroke="currentColor" 
-              className="w-6 h-6"
+          {isMobile && (
+            <button 
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-white/90 shadow-sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <X className="w-5 h-5" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                <Menu className="w-5 h-5" />
               )}
-            </svg>
-          </button>
+            </button>
+          )}
         </div>
         
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 py-4 animate-fade-in">
+        {isMobile && isMobileMenuOpen && (
+          <div className="md:hidden mt-4 py-4 animate-fade-in bg-white rounded-xl shadow-lg p-4">
             <nav className="flex flex-col space-y-4">
               <a href="#" className="text-sm font-medium py-2">Find Creators</a>
               <a href="#" className="text-sm font-medium py-2">Pricing</a>

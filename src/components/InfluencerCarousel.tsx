@@ -2,8 +2,10 @@
 import { useRef, useEffect, useState } from 'react';
 import InfluencerCard from './InfluencerCard';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
 
-// Sample data
+// Improved influencer data with real images
 const influencers = [
   {
     id: 1,
@@ -64,14 +66,34 @@ const influencers = [
     followers: '760K',
     engagement: '2.9%',
     price: '420'
+  },
+  {
+    id: 7,
+    name: 'Sophia Lee',
+    username: 'sophial',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    category: 'Food',
+    followers: '510K',
+    engagement: '4.5%',
+    price: '380'
+  },
+  {
+    id: 8,
+    name: 'Marcus Johnson',
+    username: 'marcusj',
+    avatar: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+    category: 'Gaming',
+    followers: '920K',
+    engagement: '3.4%',
+    price: '700'
   }
 ];
 
 const InfluencerCarousel = () => {
+  const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
-  const isMobile = useIsMobile();
   
   useEffect(() => {
     const updateScrollMeasurements = () => {
@@ -92,18 +114,6 @@ const InfluencerCarousel = () => {
     }
   };
   
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });
-    }
-  };
-  
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-  };
-  
   return (
     <section className="py-12 md:py-20">
       <div className="container px-4 md:px-6">
@@ -112,67 +122,72 @@ const InfluencerCarousel = () => {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Popular Influencers</h2>
             <p className="text-muted-foreground mt-2">Discover trending creators across all platforms</p>
           </div>
-          
-          {!isMobile && (
-            <div className="hidden md:flex items-center space-x-2">
-              <button 
-                onClick={scrollLeft}
-                disabled={scrollPosition <= 5}
-                className="p-2 rounded-full border bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-40 transition-opacity"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-              </button>
-              <button 
-                onClick={scrollRight}
-                disabled={scrollPosition >= maxScroll - 5}
-                className="p-2 rounded-full border bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-40 transition-opacity"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-              </button>
-            </div>
-          )}
         </div>
         
-        <div className="relative">
-          <div
-            ref={scrollRef}
-            className="scroll-container"
-            onScroll={handleScroll}
-          >
-            {influencers.map((influencer) => (
-              <div key={influencer.id} className="scroll-item">
-                <InfluencerCard
-                  name={influencer.name}
-                  username={influencer.username}
-                  avatar={influencer.avatar}
-                  category={influencer.category}
-                  followers={influencer.followers}
-                  engagement={influencer.engagement}
-                  price={influencer.price}
-                />
-              </div>
-            ))}
-          </div>
-          
-          {isMobile && (
+        {isMobile ? (
+          // Mobile horizontal scroll view
+          <div className="relative -mx-4">
+            <div
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto px-4 pb-6 snap-x snap-mandatory scrollbar-hide"
+              onScroll={handleScroll}
+            >
+              {influencers.map((influencer) => (
+                <div 
+                  key={influencer.id} 
+                  className="snap-start flex-shrink-0 first:pl-4 last:pr-4"
+                >
+                  <InfluencerCard
+                    name={influencer.name}
+                    username={influencer.username}
+                    avatar={influencer.avatar}
+                    category={influencer.category}
+                    followers={influencer.followers}
+                    engagement={influencer.engagement}
+                    price={influencer.price}
+                  />
+                </div>
+              ))}
+            </div>
+            
             <div className="flex justify-center mt-6 space-x-2">
               {Array.from({ length: Math.ceil(influencers.length / 2) }).map((_, i) => (
                 <span 
                   key={i}
-                  className={`block h-1.5 rounded-full transition-all duration-300 ${
+                  className={cn(
+                    "block h-1.5 rounded-full transition-all duration-300",
                     i === Math.floor(scrollPosition / (300 * 2)) 
                       ? "w-6 bg-primary" 
                       : "w-2 bg-gray-300"
-                  }`}
+                  )}
                 />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          // Desktop carousel using shadcn/ui carousel component
+          <Carousel className="w-full">
+            <CarouselContent>
+              {influencers.map((influencer) => (
+                <CarouselItem key={influencer.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                  <InfluencerCard
+                    name={influencer.name}
+                    username={influencer.username}
+                    avatar={influencer.avatar}
+                    category={influencer.category}
+                    followers={influencer.followers}
+                    engagement={influencer.engagement}
+                    price={influencer.price}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden md:flex justify-end gap-2 mt-4">
+              <CarouselPrevious className="static transform-none" />
+              <CarouselNext className="static transform-none" />
+            </div>
+          </Carousel>
+        )}
       </div>
     </section>
   );

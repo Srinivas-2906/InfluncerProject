@@ -1,18 +1,21 @@
 
 import React from 'react';
 import Button from './Button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const HeroSection = () => {
+  const isMobile = useIsMobile();
+  
   return (
-    <section className="pt-28 pb-16 md:pt-40 md:pb-20">
+    <section className={`pt-20 ${isMobile ? 'pb-12' : 'pb-16 md:pt-40 md:pb-20'}`}>
       <div className="container px-4 md:px-6">
         <div className="max-w-5xl mx-auto text-center">
           <div className="space-y-4 text-reveal">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight md:leading-tight">
-              Discover and Collaborate with <span className="text-primary">Top Influencers</span>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight md:leading-tight">
+              Find & Hire <span className="text-primary">Instagram Influencers</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto text-balance">
-              Find the perfect creators for your brand collaborations and marketing campaigns
+            <p className="text-lg md:text-2xl text-gray-600 max-w-3xl mx-auto text-balance">
+              Connect with creators, receive collaboration proposals, and hire influencers in minutes
             </p>
           </div>
           
@@ -28,16 +31,18 @@ const HeroSection = () => {
             </Button>
           </div>
           
-          <div className="mt-10 md:mt-16 animate-fade-in" style={{ animationDelay: '0.8s' }}>
-            <p className="text-sm text-gray-500 mb-4">Trusted by leading brands worldwide</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 opacity-70">
-              <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/nike.svg" alt="Nike" className="h-5 md:h-7" />
-              <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/samsung.svg" alt="Samsung" className="h-5 md:h-7" />
-              <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/spotify.svg" alt="Spotify" className="h-5 md:h-7" />
-              <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/airbnb.svg" alt="Airbnb" className="h-5 md:h-7" />
-              <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/amazon.svg" alt="Amazon" className="h-5 md:h-7" />
+          {!isMobile && (
+            <div className="mt-10 md:mt-16 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+              <p className="text-sm text-gray-500 mb-4">Trusted by leading brands worldwide</p>
+              <div className="flex flex-wrap justify-center items-center gap-8 opacity-70">
+                <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/nike.svg" alt="Nike" className="h-5 md:h-7" />
+                <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/samsung.svg" alt="Samsung" className="h-5 md:h-7" />
+                <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/spotify.svg" alt="Spotify" className="h-5 md:h-7" />
+                <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/airbnb.svg" alt="Airbnb" className="h-5 md:h-7" />
+                <img src="https://raw.githubusercontent.com/cruip/cruip-com/main/public/showcase-assets/logos/amazon.svg" alt="Amazon" className="h-5 md:h-7" />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>
